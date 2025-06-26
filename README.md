@@ -1,9 +1,4 @@
-Berikut adalah versi lengkap dalam format `README.md` untuk repositori GitHub proyek **Website Ibu Pintar**:
-
----
-
-````markdown
-# 🌸 Website Ibu Pintar
+# Website Ibu Pintar
 
 Selamat datang di repositori **Ibu Pintar**!  
 Ini adalah aplikasi web full-stack yang dirancang untuk menjadi platform informasi dan komunitas interaktif bagi para calon ibu dan ibu muda.
@@ -166,18 +161,3 @@ Kami terbuka untuk kontribusi! Jika Anda ingin membantu mengembangkan proyek ini
 ## 📄 Lisensi
 
 Proyek ini dilisensikan di bawah [MIT License](LICENSE).
-
----
-
-## 📫 Kontak
-
-Untuk pertanyaan atau kerja sama, silakan hubungi tim kami melalui email: **[ibupintar@domainanda.com](mailto:ibupintar@domainanda.com)**
-
----
-
-```
-
----
-
-Silakan ubah bagian `https://github.com/NAMA_USER_ANDA/NAMA_REPO_ANDA.git` dan alamat email sesuai data asli Anda sebelum mengunggah ke GitHub. Jika ingin saya bantu ubahnya sekarang juga, tinggal berikan nama user dan repo Anda.
-```
