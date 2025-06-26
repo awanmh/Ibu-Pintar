@@ -1,0 +1,24 @@
+/* src/assets/css/main.css */
+
+/* CSS Reset Sederhana */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', sans-serif; /* Font dari Google Fonts yang kita impor di index.html */
+  line-height: 1.6;
+  background-color: #fdfdfd;
+  color: #333;
+}
+
+a {
+  text-decoration: none;
+  color: #ff69b4; /* Warna link default */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700; /* Bold */
+}

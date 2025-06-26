@@ -1,0 +1,80 @@
+proyek-ibu-hamil/
+├── backend/
+│   ├── node_modules/             # Folder dependensi (dibuat otomatis oleh npm)
+│   ├── config/
+│   │   └── database.js           # Konfigurasi koneksi ke database (Sequelize)
+│   ├── controllers/
+│   │   ├── articleController.js  # Logika untuk fitur Artikel (CRUD)
+│   │   ├── categoryController.js # Logika untuk Kategori
+│   │   ├── consultationController.js # Logika untuk menerima Konsultasi
+│   │   ├── reservationController.js  # Logika untuk menerima Reservasi
+│   │   ├── testimonialController.js  # Logika untuk Testimonial
+│   │   └── userController.js     # Logika untuk User (Admin/Visitor), termasuk login
+│   ├── middleware/
+│   │   ├── authMiddleware.js     # Middleware untuk cek otentikasi (misal: cek admin)
+│   │   └── errorMiddleware.js    # Middleware untuk menangani error secara terpusat
+│   ├── models/
+│   │   ├── Article.js            # Model/Skema untuk tabel Article
+│   │   ├── Category.js           # Model/Skema untuk tabel Category
+│   │   ├── Consultation.js       # Model/Skema untuk tabel Consultation
+│   │   ├── Reservation.js        # Model/Skema untuk tabel Reservation
+│   │   ├── Testimonial.js        # Model/Skema untuk tabel Testimonial
+│   │   ├── User.js               # Model/Skema untuk tabel User
+│   │   └── index.js              # File untuk menginisialisasi semua model dan relasinya
+│   ├── routes/
+│   │   ├── articleRoutes.js      # Kumpulan endpoint API untuk /api/articles
+│   │   ├── consultationRoutes.js # Kumpulan endpoint API untuk /api/consultations
+│   │   ├── reservationRoutes.js  # Kumpulan endpoint API untuk /api/reservations
+│   │   └── index.js              # File utama untuk menggabungkan semua router API
+│   ├── .env                      # Menyimpan variabel rahasia (koneksi DB, secret key)
+│   ├── .gitignore                # Daftar file/folder yang akan diabaikan oleh Git
+│   ├── package.json              # Informasi proyek backend & daftar dependensi
+│   └── server.js                 # File utama untuk menjalankan server Express.js
+│
+└── frontend/
+    ├── node_modules/             # Folder dependensi (dibuat otomatis oleh npm/vue)
+    ├── public/
+    │   ├── favicon.ico           # Ikon website di tab browser
+    │   └── index.html            # File HTML utama tempat aplikasi Vue akan di-mount
+    ├── src/
+    │   ├── assets/               # Untuk menyimpan aset statis
+    │   │   ├── css/              # File-file CSS global (misal: main.css)
+    │   │   ├── images/           # Gambar, logo, ikon
+    │   │   └── fonts/            # File font kustom
+    │   ├── components/           # Komponen UI kecil yang bisa dipakai berulang kali
+    │   │   ├── common/           # Komponen sangat generik (Tombol, Modal, Spinner)
+    │   │   │   ├── AppButton.vue
+    │   │   │   └── AppModal.vue
+    │   │   ├── layout/           # Komponen untuk tata letak halaman
+    │   │   │   ├── TheNavbar.vue
+    │   │   │   └── TheFooter.vue
+    │   │   ├── articles/         # Komponen spesifik untuk fitur artikel
+    │   │   │   └── ArticleCard.vue
+    │   │   └── forms/            # Komponen spesifik untuk form
+    │   │       ├── ReservationForm.vue
+    │   │       └── ConsultationForm.vue
+    │   ├── router/
+    │   │   └── index.js          # Konfigurasi semua rute/halaman (Vue Router)
+    │   ├── services/
+    │   │   └── ApiService.js     # Fungsi untuk berkomunikasi dengan API backend (Axios)
+    │   ├── store/                # (Opsional) Untuk state management (Vuex) jika aplikasi kompleks
+    │   │   ├── index.js          # Konfigurasi utama Vuex Store
+    │   │   └── modules/          # Modul-modul store (misal: articles.js, user.js)
+    │   ├── utils/                # Fungsi bantuan (misal: format tanggal, validasi)
+    │   │   └── formatDate.js
+    │   ├── views/                # Komponen yang merepresentasikan satu halaman penuh
+    │   │   ├── HomeView.vue        # Halaman Beranda
+    │   │   ├── AboutView.vue       # Halaman Tentang Kami
+    │   │   ├── ContactView.vue     # Halaman Kontak
+    │   │   ├── ArticlesView.vue    # Halaman untuk menampilkan daftar artikel
+    │   │   ├── ArticleDetailView.vue # Halaman untuk detail satu artikel
+    │   │   ├── ConsultationView.vue  # Halaman Form Konsultasi
+    │   │   ├── ReservationView.vue # Halaman Pilih Layanan Reservasi
+    │   │   ├── PrenatalYogaView.vue  # Halaman Form Yoga Prenatal
+    │   │   ├── BabyMassageInfoView.vue # Halaman Info Pijat Bayi (Segera Hadir)
+    │   │   └── NotFoundView.vue    # Halaman untuk URL yang tidak ditemukan (404)
+    │   ├── App.vue                 # Komponen root/induk dari aplikasi Vue
+    │   └── main.js               # File utama untuk inisialisasi aplikasi Vue
+    ├── .gitignore                # Daftar file/folder yang akan diabaikan oleh Git
+    ├── package.json              # Informasi proyek frontend & daftar dependensi
+    └── vue.config.js             # (Opsional) File konfigurasi untuk proyek Vue

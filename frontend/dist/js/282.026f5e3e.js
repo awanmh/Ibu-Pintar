@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkfrontend"]=self["webpackChunkfrontend"]||[]).push([[282],{282:(a,n,e)=>{e.r(n),e.d(n,{default:()=>s});var t=e(641);const u={class:"page-container"};function d(a,n){return(0,t.uX)(),(0,t.CE)("div",u,n[0]||(n[0]=[(0,t.Lk)("h1",null,"Tentang Kami",-1),(0,t.Lk)("p",null,"Ibu Sehat Bahagia adalah platform digital yang didedikasikan untuk mendukung para calon ibu...",-1)]))}var r=e(262);const i={},l=(0,r.A)(i,[["render",d],["__scopeId","data-v-07f1da2f"]]),s=l}}]);
+//# sourceMappingURL=282.026f5e3e.js.map
