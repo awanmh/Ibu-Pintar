@@ -1,3 +1,4 @@
+// ServicesView.vue
 <template>
   <div class="services-view animate-fade-in">
     <section class="hero-section">
@@ -7,24 +8,9 @@
 
     <main class="container">
       <div class="filter-bar animate-slide-up">
-        <button 
-          @click="setFilter('all')" 
-          :class="['filter-btn', { active: activeFilter === 'all' }]"
-        >
-          Semua Treatment
-        </button>
-        <button 
-          @click="setFilter('single')" 
-          :class="['filter-btn', { active: activeFilter === 'single' }]"
-        >
-          Single Treatment
-        </button>
-        <button 
-          @click="setFilter('package')" 
-          :class="['filter-btn', { active: activeFilter === 'package' }]"
-        >
-          Package Treatment
-        </button>
+        <button @click="setFilter('all')" :class="['filter-btn', { active: activeFilter === 'all' }]">Semua Treatment</button>
+        <button @click="setFilter('single')" :class="['filter-btn', { active: activeFilter === 'single' }]">Single Treatment</button>
+        <button @click="setFilter('package')" :class="['filter-btn', { active: activeFilter === 'package' }]">Package Treatment</button>
       </div>
 
       <div class="services-grid">
@@ -35,12 +21,12 @@
           :style="{ animationDelay: `${index * 0.1}s` }"
         >
           <div class="card-image-wrapper">
-            <img :src="service.image" :alt="service.name" />
+            <img :src="service.imageUrl" :alt="service.name" />
             <span class="category-badge">{{ service.category }}</span>
           </div>
           <div class="card-content">
             <h3>{{ service.name }}</h3>
-            <p class="price">Mulai dari Rp {{ service.starting_price.toLocaleString('id-ID') }}</p>
+            <p class="price">Rp {{ service.price.toLocaleString('id-ID') }}</p>
             <router-link :to="`/layanan/${service.slug}`" class="detail-btn">
               Lihat Detail Treatment
             </router-link>
@@ -52,24 +38,28 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { services } from '@/data/services.js';
+import { ref, onMounted, computed } from 'vue';
+import ApiService from '@/services/ApiService';
 
-const allServices = ref(services);
+const allServices = ref([]);
 const activeFilter = ref('all');
+
+onMounted(async () => {
+  try {
+    const { data } = await ApiService.getAllTreatments();
+    allServices.value = data;
+  } catch (error) {
+    console.error('Gagal memuat treatment:', error);
+  }
+});
 
 const setFilter = (filter) => {
   activeFilter.value = filter;
 };
 
 const filteredServices = computed(() => {
-  if (activeFilter.value === 'single') {
-    return allServices.value;
-  }
-  if (activeFilter.value === 'package') {
-    return [];
-  }
-  return allServices.value;
+  if (activeFilter.value === 'all') return allServices.value;
+  return allServices.value.filter((s) => s.type === activeFilter.value);
 });
 </script>
 

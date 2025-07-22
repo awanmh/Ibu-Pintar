@@ -64,17 +64,19 @@ exports.getArticleById = async (req, res) => {
 exports.updateArticle = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content, category_id } = req.body;
+    const { title, content, category_id, imageUrl } = req.body; // tambahkan imageUrl
     const article = await Article.findByPk(id);
 
     if (!article) {
       return res.status(404).json({ message: "Artikel tidak ditemukan." });
     }
 
-    // Update field yang ada di body request
+    // Update semua field jika tersedia
     article.title = title || article.title;
     article.content = content || article.content;
     article.category_id = category_id || article.category_id;
+    article.imageUrl = imageUrl || article.imageUrl; // ini penting
+
     await article.save();
 
     res.status(200).json({ message: "Artikel berhasil diperbarui.", data: article });
@@ -82,6 +84,7 @@ exports.updateArticle = async (req, res) => {
     res.status(500).json({ message: "Gagal mengupdate artikel.", error: error.message });
   }
 };
+
 
 // Menghapus artikel (Admin)
 exports.deleteArticle = async (req, res) => {

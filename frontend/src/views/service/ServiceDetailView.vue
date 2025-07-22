@@ -1,47 +1,53 @@
+// ServicesDetailView.vue
 <template>
-  <div class="service-detail-view animate-fade-in">
+  <div class="service-detail-view animate-fade-in" v-if="service">
     <section class="hero-section">
       <div class="breadcrumb animate-slide-up">
         <router-link to="/">Home</router-link> / <router-link to="/layanan">Treatments</router-link> / {{ service.name }}
       </div>
       <h1 class="animate-slide-up delay-1">{{ service.name }}</h1>
-      <p class="animate-slide-up delay-2">{{ service.description }}</p>
+      <p class="animate-slide-up delay-2">{{ service.description || '-' }}</p>
     </section>
 
     <main class="container">
-      <div class="packages-grid">
-        <div 
-          v-for="(pkg, i) in service.packages" 
-          :key="pkg.id" 
-          class="package-card animate-fade-in" 
-          :style="{ animationDelay: `${i * 0.1}s` }"
-        >
-          <img src="https://akcdn.detik.net.id/visual/2019/03/26/a9cd5bd9-3823-4cad-be66-5f3fd0a5e36f_43.jpeg?w=720&q=90" alt="Package image" />
-          <div class="package-content">
-            <span class="duration-badge">{{ pkg.duration }} menit</span>
-            <h3>{{ pkg.name }}</h3>
-            <p>{{ pkg.description }}</p>
-            <div class="package-footer">
-              <span class="price">Rp {{ pkg.price.toLocaleString('id-ID') }}</span>
-              <router-link :to="`/reservasi?service=${encodeURIComponent(pkg.name)}`" class="booking-btn">
-                Booking Treatment
-              </router-link>
-            </div>
-          </div>
+      <div class="detail-content">
+        <img :src="service.imageUrl" alt="Treatment Image" />
+        <div class="info">
+          <p><strong>Durasi:</strong> {{ service.duration || '-' }}</p>
+          <p><strong>Kategori:</strong> {{ service.category || '-' }}</p>
+          <p><strong>Harga:</strong> Rp {{ service.price?.toLocaleString('id-ID') || '0' }}</p>
+          <router-link
+            :to="`/reservasi?service=${encodeURIComponent(service.name)}`"
+            class="booking-btn"
+          >
+            Booking Treatment
+          </router-link>
         </div>
       </div>
     </main>
   </div>
+
+  <div v-else class="container">
+    <p>Sedang memuat data treatment...</p>
+  </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { services } from '@/data/services.js';
+import ApiService from '@/services/ApiService';
 
 const route = useRoute();
-const serviceSlug = route.params.slug;
-const service = ref(services.find(s => s.slug === serviceSlug));
+const service = ref(null);
+
+onMounted(async () => {
+  try {
+    const { data } = await ApiService.getTreatmentBySlug(route.params.slug);
+    service.value = data;
+  } catch (error) {
+    console.error('Gagal memuat detail treatment:', error);
+  }
+});
 </script>
 
 <style scoped>

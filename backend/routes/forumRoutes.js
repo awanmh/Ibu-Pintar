@@ -1,14 +1,19 @@
+// routes/forumRoutes.js
 const express = require('express');
 const router = express.Router();
-const forumController = require('../controllers/forumController');
-// const { protect } = require('../middleware/authMiddleware'); // Uncomment jika sudah ada login
+const forumController = require('../controllers/forumController'); // pastikan file controller ini benar
+const { protect, restrictTo } = require('../middleware/authMiddleware');
 
-// Rute Publik
+// ==================== RUTE PUBLIK ====================
+// Semua pengguna (tanpa login) bisa melihat daftar pertanyaan & detail
 router.get('/', forumController.getAllQuestions);
 router.get('/:id', forumController.getQuestionById);
 
-// Rute yang perlu login
-router.post('/', forumController.createQuestion); // Diasumsikan perlu login
-router.post('/:id/answers', forumController.createAnswer); // Diasumsikan perlu login
+// ==================== RUTE KHUSUS LOGIN ====================
+// Pengguna yang login (role: visitor atau admin) bisa mengajukan pertanyaan
+router.post('/', protect, restrictTo('visitor', 'admin'), forumController.createQuestion);
+
+// Admin saja yang bisa menjawab pertanyaan
+router.post('/:id/answers', protect, restrictTo('admin'), forumController.createAnswer);
 
 module.exports = router;

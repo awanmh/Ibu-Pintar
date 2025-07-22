@@ -8,16 +8,21 @@ const categoryController = require('../controllers/categoryController');
 const testimonialController = require('../controllers/testimonialController');
 const userController = require('../controllers/userController');
 const { protect, isAdmin } = require('../middleware/authMiddleware');
+const authRoutes = require('./authRoutes');
 
 // Impor file-file rute
 const articleRoutes = require('./articleRoutes');
 const consultationRoutes = require('./consultationRoutes');
 const reservationRoutes = require('./reservationRoutes');
+const treatmentRoutes = require('./treatmentRoutes');
+
+
 
 // Daftarkan setiap rute ke path dasarnya
 router.use('/articles', articleRoutes);
 router.use('/consultations', consultationRoutes);
 router.use('/reservations', reservationRoutes);
+router.use('/treatments', treatmentRoutes);
 
 
 // --- Rute Tambahan untuk Controller Lain ---
@@ -35,6 +40,8 @@ router.get('/users', protect, isAdmin, userController.getAllUsers);
 router.post('/users', protect, isAdmin, userController.createUser);
 
 router.use('/tanya-bidan', forumRoutes); // Ganti nama endpoint
+
+router.use('/auth', authRoutes);
 
 
 module.exports = router;

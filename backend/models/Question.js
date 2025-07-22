@@ -1,16 +1,19 @@
-const { DataTypes } = require('sequelize');
+//Question
+const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Question = sequelize.define('Question', {
+class Question extends Model {}
+
+Question.init({
   title: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   content: {
     type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  // user_id akan ditambahkan via relasi
-});
+    allowNull: false
+  }
+}, { sequelize, modelName: 'Question' });
 
 module.exports = Question;
+

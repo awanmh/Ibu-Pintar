@@ -1,8 +1,8 @@
-// models/index.js
+//models/index.js
+const { Sequelize } = require('sequelize');
 const sequelize = require('../config/database');
-const Sequelize = require('sequelize');
 
-// Impor semua model
+// Import semua model
 const User = require('./User');
 const Category = require('./Category');
 const Article = require('./Article');
@@ -11,45 +11,55 @@ const Consultation = require('./Consultation');
 const Reservation = require('./Reservation');
 const Question = require('./Question');
 const Answer = require('./Answer');
+const Treatment = require('./Treatment')(sequelize);
 
-// Buat objek database untuk menampung semua model
-const db = {};
+// Inisialisasi objek db
+const db = {
+  Sequelize,
+  sequelize,
+  User,
+  Category,
+  Article,
+  Testimonial,
+  Consultation,
+  Reservation,
+  Question,
+  Answer,
+  Treatment
+};
 
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
+// ==================== RELASI ====================
 
-db.User = User;
-db.Category = Category;
-db.Article = Article;
-db.Testimonial = Testimonial;
-db.Consultation = Consultation;
-db.Reservation = Reservation;
-db.Question = Question;
-db.Answer = Answer;
+// User - Article
+User.hasMany(Article, { foreignKey: 'author_id' });
+Article.belongsTo(User, { as: 'author', foreignKey: 'author_id' });
 
-// Definisikan semua relasi/asosiasi antar tabel di sini
-// Relasi User -> Article (Satu User bisa menulis banyak Artikel)
-db.User.hasMany(db.Article, { foreignKey: 'author_id' });
-db.Article.belongsTo(db.User, { as: 'author', foreignKey: 'author_id' });
+// Category - Article
+Category.hasMany(Article, { foreignKey: 'category_id' });
+Article.belongsTo(Category, { as: 'category', foreignKey: 'category_id' });
 
-// Relasi Category -> Article (Satu Kategori bisa memiliki banyak Artikel)
-db.Category.hasMany(db.Article, { foreignKey: 'category_id' });
-db.Article.belongsTo(db.Category, { as: 'category', foreignKey: 'category_id' });
+// User - Testimonial
+User.hasMany(Testimonial, { foreignKey: 'user_id' });
+Testimonial.belongsTo(User, { as: 'user', foreignKey: 'user_id' });
 
-// Relasi User -> Testimonial (Satu User bisa menulis banyak Testimonial)
-db.User.hasMany(db.Testimonial, { foreignKey: 'user_id' });
-db.Testimonial.belongsTo(db.User, { as: 'user', foreignKey: 'user_id' });
+// User - Question
+User.hasMany(Question, { foreignKey: 'user_id', as: 'questions' });
+Question.belongsTo(User, { foreignKey: 'user_id', as: 'asker' }); // ✅ hanya ini untuk 'asker'
 
-// Relasi User -> Question (Satu User bisa bertanya banyak)
-db.User.hasMany(db.Question, { foreignKey: 'user_id' });
-db.Question.belongsTo(db.User, { as: 'asker', foreignKey: 'user_id' });
+// User - Answer
+User.hasMany(Answer, { foreignKey: 'user_id', as: 'answers' });
+Answer.belongsTo(User, { foreignKey: 'user_id', as: 'author' });
 
-// Relasi User -> Answer (Satu User bisa menjawab banyak)
-db.User.hasMany(db.Answer, { foreignKey: 'user_id' });
-db.Answer.belongsTo(db.User, { as: 'author', foreignKey: 'user_id' });
+// Question - Answer
+Question.hasMany(Answer, { foreignKey: 'question_id', as: 'answers' });
+Answer.belongsTo(Question, { foreignKey: 'question_id', as: 'question' });
 
-// Relasi Question -> Answer (Satu Pertanyaan punya banyak Jawaban)
-db.Question.hasMany(db.Answer, { foreignKey: 'question_id' });
-db.Answer.belongsTo(db.Question, { as: 'question', foreignKey: 'question_id' });
+// Treatment - Package Items (self-relational many-to-many)
+Treatment.belongsToMany(Treatment, {
+  as: 'Items',
+  through: 'package_items',
+  foreignKey: 'packageId',
+  otherKey: 'treatmentId'
+});
 
 module.exports = db;

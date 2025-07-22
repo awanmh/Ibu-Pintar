@@ -11,16 +11,20 @@
 
     <!-- Bagian Jawaban -->
     <div class="answers-section animate-fade-in delay-1">
-      <h2>Jawaban ({{ question.Answers.length }})</h2>
+      <h2>Jawaban ({{ question.answers.length }})</h2>
       <div
-        v-for="(answer, index) in question.Answers"
+        v-for="(answer, index) in question.answers"
         :key="answer.id"
         class="answer-item animate-fade-in"
+        :class="{'admin-answer': answer.author.role === 'admin'}"
         :style="{ animationDelay: `${0.2 + index * 0.1}s` }"
       >
         <p class="answer-content">💬 {{ answer.content }}</p>
         <p class="meta">
-          Dijawab oleh <strong>{{ answer.author.name }}</strong> ({{ answer.author.role }}) pada {{ formatDate(answer.createdAt) }}
+          Dijawab oleh 
+          <strong>{{ answer.author.name }}</strong>
+          <span v-if="answer.author.role === 'admin'" class="admin-badge"> (Bidan)</span>
+          pada {{ formatDate(answer.createdAt) }}
         </p>
       </div>
     </div>
@@ -65,7 +69,6 @@ const submitAnswer = async () => {
   try {
     const answerData = {
       content: newAnswer.value,
-      user_id: 1 // Ganti dengan user ID aktif
     };
     await ApiService.createAnswer(route.params.id, answerData);
     newAnswer.value = '';

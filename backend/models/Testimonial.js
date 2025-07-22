@@ -1,13 +1,10 @@
 // models/Testimonial.js
-const { DataTypes } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Testimonial = sequelize.define('Testimonial', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
+class Testimonial extends Model {}
+
+Testimonial.init({
   user_name: {
     type: DataTypes.STRING,
     allowNull: false
@@ -16,7 +13,6 @@ const Testimonial = sequelize.define('Testimonial', {
     type: DataTypes.TEXT,
     allowNull: false
   }
-  // Foreign Key `user_id` akan ditambahkan melalui asosiasi
-});
+}, { sequelize, modelName: 'Testimonial' });
 
 module.exports = Testimonial;

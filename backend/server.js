@@ -3,6 +3,7 @@
 // 1. Impor semua modul yang dibutuhkan
 require('dotenv').config(); // Paling pertama agar semua file bisa akses .env
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const db = require('./models'); // Impor dari models/index.js (Jantung Model & Relasi)
 const mainRouter = require('./routes'); // Impor dari routes/index.js (Pusat Semua Rute)
@@ -21,6 +22,14 @@ app.use(express.urlencoded({ extended: true })); // Mem-parsing body request dar
 // Semua rute yang kita definisikan akan memiliki awalan '/api'
 // Contoh: /articles akan menjadi /api/articles
 app.use('/api', mainRouter);
+// 4A. Buat Rute untuk Upload
+const uploadRoutes = require('./routes/uploadRoutes');
+app.use('/api/upload', uploadRoutes);
+app.use('/uploads', express.static('uploads'));
+
+// 4B. Jadikan Folder 'uploads' Statis
+// Ini agar gambar yang diupload bisa diakses dari browser
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // 5. Rute dasar untuk mengecek apakah server berjalan
 app.get('/', (req, res) => {

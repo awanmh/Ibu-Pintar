@@ -1,13 +1,9 @@
-// models/User.js
-const { DataTypes } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../config/database');
 
-const User = sequelize.define('User', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
+class User extends Model {}
+
+User.init({
   name: {
     type: DataTypes.STRING,
     allowNull: false
@@ -15,18 +11,30 @@ const User = sequelize.define('User', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
+    validate: { isEmail: true }
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: true // dibuat nullable agar login Google bisa tanpa password
+  },
+  googleId: {
+    type: DataTypes.STRING,
+    allowNull: true,
     unique: true
+  },
+  provider: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: 'local' // atau 'google'
   },
   role: {
     type: DataTypes.ENUM('visitor', 'admin'),
     defaultValue: 'visitor'
   }
-  // Di aplikasi nyata, tambahkan kolom password di sini
-  // password: { type: DataTypes.STRING, allowNull: false }
 }, {
-  // Opsi untuk menonaktifkan kolom createdAt dan updatedAt jika tidak ada di SQL
-  // Kita akan membiarkannya aktif karena ini praktik yang baik
-  timestamps: true
+  sequelize,
+  modelName: 'User'
 });
 
 module.exports = User;

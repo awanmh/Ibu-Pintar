@@ -1,80 +1,141 @@
 proyek-ibu-hamil/
 ├── backend/
-│   ├── node_modules/             # Folder dependensi (dibuat otomatis oleh npm)
+│   ├── node_modules/            
 │   ├── config/
-│   │   └── database.js           # Konfigurasi koneksi ke database (Sequelize)
+│   │   └── database.js          
 │   ├── controllers/
-│   │   ├── articleController.js  # Logika untuk fitur Artikel (CRUD)
-│   │   ├── categoryController.js # Logika untuk Kategori
-│   │   ├── consultationController.js # Logika untuk menerima Konsultasi
-│   │   ├── reservationController.js  # Logika untuk menerima Reservasi
-│   │   ├── testimonialController.js  # Logika untuk Testimonial
-│   │   └── userController.js     # Logika untuk User (Admin/Visitor), termasuk login
+│   │   ├── articleController.js  
+│   │   ├── authController.js  
+│   │   ├── categoryController.js 
+│   │   ├── consultationController.js 
+│   │   ├── reservationController.js  
+│   │   ├── forumController.js 
+│   │   ├── treatmentController.js 
+│   │   ├── testimonialController.js  
+│   │   └── userController.js     
 │   ├── middleware/
-│   │   ├── authMiddleware.js     # Middleware untuk cek otentikasi (misal: cek admin)
-│   │   └── errorMiddleware.js    # Middleware untuk menangani error secara terpusat
+│   │   ├── authMiddleware.js    
+│   │   ├── roleMiddleware.js    
+│   │   ├── upload.js    
+│   │   └── errorMiddleware.js   
 │   ├── models/
-│   │   ├── Article.js            # Model/Skema untuk tabel Article
-│   │   ├── Category.js           # Model/Skema untuk tabel Category
-│   │   ├── Consultation.js       # Model/Skema untuk tabel Consultation
-│   │   ├── Reservation.js        # Model/Skema untuk tabel Reservation
-│   │   ├── Testimonial.js        # Model/Skema untuk tabel Testimonial
-│   │   ├── User.js               # Model/Skema untuk tabel User
-│   │   └── index.js              # File untuk menginisialisasi semua model dan relasinya
+│   │   ├── Article.js            
+│   │   ├── Category.js          
+│   │   ├── Consultation.js       
+│   │   ├── Reservation.js        
+│   │   ├── PackageItem.js        
+│   │   ├── Treatment.js        
+│   │   ├── Testimonial.js        
+│   │   ├── Question.js      
+│   │   ├── Answer.js        
+│   │   ├── User.js              
+│   │   └── index.js              
+│   ├── uploads/
 │   ├── routes/
-│   │   ├── articleRoutes.js      # Kumpulan endpoint API untuk /api/articles
-│   │   ├── consultationRoutes.js # Kumpulan endpoint API untuk /api/consultations
-│   │   ├── reservationRoutes.js  # Kumpulan endpoint API untuk /api/reservations
-│   │   └── index.js              # File utama untuk menggabungkan semua router API
-│   ├── .env                      # Menyimpan variabel rahasia (koneksi DB, secret key)
-│   ├── .gitignore                # Daftar file/folder yang akan diabaikan oleh Git
-│   ├── package.json              # Informasi proyek backend & daftar dependensi
-│   └── server.js                 # File utama untuk menjalankan server Express.js
+│   │   ├── authRoutes.js      
+│   │   ├── articleRoutes.js      
+│   │   ├── consultationRoutes.js
+│   │   ├── forumRoutes.js 
+│   │   ├── reservationRoutes.js 
+│   │   ├── treatmentRoutes.js 
+│   │   ├── uploadRoutes.js 
+│   │   └── index.js             
+│   ├── uploads/
+│   ├── utils/
+│   │   └── slugify.js             
+│   ├── .env                     
+│   ├── .gitignore                
+│   ├── package.json              
+│   └── server.js                
 │
 └── frontend/
-    ├── node_modules/             # Folder dependensi (dibuat otomatis oleh npm/vue)
+    ├── node_modules/            
     ├── public/
-    │   ├── favicon.ico           # Ikon website di tab browser
-    │   └── index.html            # File HTML utama tempat aplikasi Vue akan di-mount
+    │   ├── favicon.ico           
+    │   └── index.html          
     ├── src/
-    │   ├── assets/               # Untuk menyimpan aset statis
-    │   │   ├── css/              # File-file CSS global (misal: main.css)
-    │   │   ├── images/           # Gambar, logo, ikon
-    │   │   └── fonts/            # File font kustom
-    │   ├── components/           # Komponen UI kecil yang bisa dipakai berulang kali
-    │   │   ├── common/           # Komponen sangat generik (Tombol, Modal, Spinner)
+    │   ├── assets/              
+    │   │   ├── css/              
+    │   │   │   └── main.css              
+    │   │   ├── images/         
+    │   │   │   ├── logo.css            
+    │   │   │   └── icon.css          
+    │   │   └── fonts/           
+    │   ├── components/           
+    │   │   ├── common/          
     │   │   │   ├── AppButton.vue
     │   │   │   └── AppModal.vue
-    │   │   ├── layout/           # Komponen untuk tata letak halaman
+    │   │   ├── layout/          
     │   │   │   ├── TheNavbar.vue
     │   │   │   └── TheFooter.vue
-    │   │   ├── articles/         # Komponen spesifik untuk fitur artikel
-    │   │   │   └── ArticleCard.vue
-    │   │   └── forms/            # Komponen spesifik untuk form
+    │   │   ├── articles/        
+    │   │   │   ├── ArticleCard.vue
+    │   │   │   ├── ArticleCarousel.vue
+    │   │   │   ├── CarouselCard.vue
+    │   │   │   ├── CommentSection.vue
+    │   │   │   ├── CompactArticleCard.vue
+    │   │   │   ├── LatestArticleSidebar.vue
+    │   │   │   └── RecommendedArticles.vue
+    │   │   └── forms/            
     │   │       ├── ReservationForm.vue
     │   │       └── ConsultationForm.vue
+    │   ├── data/
+    │   │   ├── articles.js
+    │   │   ├── dummyArticles.js
+    │   │   └── services.js
     │   ├── router/
-    │   │   └── index.js          # Konfigurasi semua rute/halaman (Vue Router)
+    │   │   └── index.js          
     │   ├── services/
-    │   │   └── ApiService.js     # Fungsi untuk berkomunikasi dengan API backend (Axios)
-    │   ├── store/                # (Opsional) Untuk state management (Vuex) jika aplikasi kompleks
-    │   │   ├── index.js          # Konfigurasi utama Vuex Store
-    │   │   └── modules/          # Modul-modul store (misal: articles.js, user.js)
-    │   ├── utils/                # Fungsi bantuan (misal: format tanggal, validasi)
+    │   │   ├── StorageService.js    
+    │   │   └── ApiService.js    
+    │   ├── store/              
+    │   │   ├── index.js         
+    │   │   └── modules/          
+    │   │         ├── auth.js         
+    │   │         └── articles.js         
+    │   ├── utils/               
     │   │   └── formatDate.js
-    │   ├── views/                # Komponen yang merepresentasikan satu halaman penuh
-    │   │   ├── HomeView.vue        # Halaman Beranda
-    │   │   ├── AboutView.vue       # Halaman Tentang Kami
-    │   │   ├── ContactView.vue     # Halaman Kontak
-    │   │   ├── ArticlesView.vue    # Halaman untuk menampilkan daftar artikel
-    │   │   ├── ArticleDetailView.vue # Halaman untuk detail satu artikel
-    │   │   ├── ConsultationView.vue  # Halaman Form Konsultasi
-    │   │   ├── ReservationView.vue # Halaman Pilih Layanan Reservasi
-    │   │   ├── PrenatalYogaView.vue  # Halaman Form Yoga Prenatal
-    │   │   ├── BabyMassageInfoView.vue # Halaman Info Pijat Bayi (Segera Hadir)
-    │   │   └── NotFoundView.vue    # Halaman untuk URL yang tidak ditemukan (404)
-    │   ├── App.vue                 # Komponen root/induk dari aplikasi Vue
-    │   └── main.js               # File utama untuk inisialisasi aplikasi Vue
-    ├── .gitignore                # Daftar file/folder yang akan diabaikan oleh Git
-    ├── package.json              # Informasi proyek frontend & daftar dependensi
-    └── vue.config.js             # (Opsional) File konfigurasi untuk proyek Vue
+    │   ├── views/               
+    │   │   ├── about/        
+    │   │   │   └── AboutView.vue
+    │   │   ├── admin/        
+    │   │   │   ├── AdminLayout.vue
+    │   │   │   ├── AdminManagerForum.vue
+    │   │   │   ├── AnswerModal.vue
+    │   │   │   ├── ArticleForm.vue
+    │   │   │   ├── DashboardView.vue
+    │   │   │   ├── ManageForum.vue
+    │   │   │   ├── ManageServices.vue
+    │   │   │   ├── ManageTreatments.vue
+    │   │   │   ├── TreatmentForm.vue
+    │   │   │   └── ManageArticles.vue  
+    │   │   ├── article/        
+    │   │   │   ├── ArticleDetailView.vue
+    │   │   │   └── ArticlesView.vue  
+    │   │   ├── auth/        
+    │   │   │   ├── LoginView.vue
+    │   │   │   └── RegisterView.vue  
+    │   │   ├── consultation/        
+    │   │   │   └── ConsultationView.vue 
+    │   │   ├── error/        
+    │   │   │   └── NotFoundView.vue 
+    │   │   ├── home/        
+    │   │   │   └── HomeView.vue            
+    │   │   ├── message/        
+    │   │   │   └── BabyMassageInfoView.vue             
+    │   │   ├── QnA/        
+    │   │   │   ├── AskQuestionView.vue
+    │   │   │   ├── ForumView.vue
+    │   │   │   └── QuestionDetailView.vue  
+    │   │   ├──  reservation/        
+    │   │   │   ├── ContactView.vue
+    │   │   │   ├── PrenatalYogaView.vue
+    │   │   │   └── ReservationView.vue      
+    │   │   └──  service/        
+    │   │       ├── ServiceDetailView.vue
+    │   │       └── ServiceView.vue      
+    │   ├── App.vue                
+    │   └── main.js               
+    ├── .gitignore                
+    ├── package.json              
+    └── vue.config.js            

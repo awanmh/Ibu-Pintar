@@ -1,46 +1,55 @@
-// middleware/authMiddleware.js
+const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
-/**
- * Middleware untuk memproteksi rute.
- * Mensimulasikan pengecekan token otentikasi.
- * Di aplikasi nyata, ini akan memverifikasi JWT.
- * * Cara kerja simulasi: Client harus mengirim header 'x-user-id' berisi ID user.
- */
+// Middleware untuk memproteksi rute (hanya user login yang boleh)
 exports.protect = async (req, res, next) => {
+  let token;
+
+  // Ambil token dari header Authorization
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  // Jika tidak ada token
+  if (!token) {
+    return res.status(401).json({ message: 'Akses ditolak, tidak ada token.' });
+  }
+
   try {
-    const userId = req.header('x-user-id');
+    // Verifikasi token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (!userId) {
-      // 401 Unauthorized - Tidak ada identitas yang diberikan
-      return res.status(401).json({ message: "Akses ditolak. Tidak ada user ID yang diberikan di header 'x-user-id'." });
-    }
-
-    const user = await User.findByPk(userId);
+    // Ambil user dari database (tanpa password)
+    const user = await User.findByPk(decoded.id, {
+      attributes: { exclude: ['password'] },
+    });
 
     if (!user) {
-      // 401 Unauthorized - Identitas yang diberikan tidak valid
-      return res.status(401).json({ message: "Akses ditolak. User tidak ditemukan." });
+      return res.status(401).json({ message: 'User tidak ditemukan.' });
     }
 
-    // Lampirkan data user ke object request agar bisa digunakan di controller selanjutnya
-    req.user = user;
-    next(); // Lanjutkan ke middleware atau controller berikutnya
+    req.user = user; // lampirkan user ke req
+    next();
   } catch (error) {
-    res.status(500).json({ message: "Terjadi kesalahan pada server saat otentikasi.", error: error.message });
+    console.error('Token tidak valid:', error.message);
+    return res.status(401).json({ message: 'Akses ditolak, token tidak valid.' });
   }
 };
 
-/**
- * Middleware untuk mengecek apakah user yang login adalah admin.
- * Middleware ini HARUS dijalankan SETELAH middleware 'protect'.
- */
+// Middleware untuk membatasi role tertentu
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ message: 'Akses ditolak, role tidak sesuai.' });
+    }
+    next();
+  };
+};
+
+// Middleware khusus hanya untuk admin (versi ringkas dari restrictTo)
 exports.isAdmin = (req, res, next) => {
-  // req.user sudah dilampirkan dari middleware 'protect'
-  if (req.user && req.user.role === 'admin') {
-    next(); // User adalah admin, lanjutkan
-  } else {
-    // 403 Forbidden - User terotentikasi tapi tidak punya hak akses
-    res.status(403).json({ message: "Akses ditolak. Rute ini hanya untuk admin." });
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Akses ditolak, hanya admin yang diizinkan.' });
   }
+  next();
 };
