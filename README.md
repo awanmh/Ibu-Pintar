@@ -69,8 +69,7 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek ini secara lokal:
 
 ### 1. Clone Repositori
 ```bash
-git clone https://github.com/NAMA_USER_ANDA/NAMA_REPO_ANDA.git
-cd NAMA_REPO_ANDA
+https://github.com/awanmh/Ibu-Pintar.git
 ````
 
 ---
@@ -106,7 +105,7 @@ APP_PORT=5000
 
 #### Setup Database
 
-* Buat database baru di MySQL sesuai nama di `.env` (contoh: `db_kehamilan`)
+* Buat database baru di MySQL sesuai nama di `.env` (contoh: `ibu_hamil`)
 * Anda dapat:
 
   * Menjalankan server dengan opsi `{ force: true }` untuk membuat semua tabel secara otomatis, **atau**
@@ -142,19 +141,7 @@ npm install
 npm run dev
 ```
 
-Frontend akan tersedia di: [http://localhost:5173](http://localhost:5173) *(atau sesuai port yang muncul)*
-
----
-
-## 🤝 Kontribusi
-
-Kami terbuka untuk kontribusi! Jika Anda ingin membantu mengembangkan proyek ini:
-
-1. Fork repositori ini.
-2. Buat branch baru: `git checkout -b fitur-baru`
-3. Commit perubahan Anda: `git commit -m "Menambahkan fitur baru"`
-4. Push ke branch Anda: `git push origin fitur-baru`
-5. Buat Pull Request.
+Frontend akan tersedia di: [http://localhost:8081](http://localhost:8081) *(atau sesuai port yang muncul)*
 
 ---
 
