@@ -1,82 +1,74 @@
 <template>
-  <div class="auth-page">
-    <div class="form-container">
-      <h2>Selamat Datang Kembali</h2>
-      <p>Masuk untuk melanjutkan aktivitas Anda di Ibu Pintar.</p>
+  <div class="login-container">
+    <div class="login-form">
+      <h1>Login</h1>
 
-      <!-- Form Login Manual -->
       <form @submit.prevent="handleLogin">
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" v-model="email" id="email" required />
         </div>
+
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" v-model="password" id="password" required />
+          <input type="password" v-model="password" id="password" required minlength="6" />
         </div>
-        <div v-if="error" class="error-message">{{ error }}</div>
-        <AppButton type="submit" :disabled="isLoading">
-          {{ isLoading ? 'Masuk...' : 'Login' }}
-        </AppButton>
+
+        <button type="submit">Login</button>
+        <p v-if="error" class="error">{{ error }}</p>
       </form>
 
-      <p class="switch-form">
-        Belum punya akun? <router-link to="/register">Daftar sekarang</router-link>
-      </p>
+      <div class="separator">
+        <span>atau</span>
+      </div>
 
-      <hr style="margin: 30px 0" />
-
-      <!-- Tombol Google Sign-In -->
-      <div class="google-login">
-        <div
-          id="g_id_onload"
-          data-client_id="922035780127-rqc8q5lebeq3l85c720ikc1c6dfv9mbe.apps.googleusercontent.com"
-          data-context="signin"
-          data-callback="handleGoogleCredentialResponse"
-          data-auto_prompt="false"
-        ></div>
-
-        <div
-          class="g_id_signin"
-          data-type="standard"
-          data-shape="rectangular"
-          data-theme="outline"
-          data-text="signin_with"
-          data-size="large"
-          data-logo_alignment="left"
-        ></div>
+      <div id="g_id_onload"
+           data-client_id="922035780127-rqc8q5lebeq3l85c720ikc1c6dfv9mbe.apps.googleusercontent.com"
+           data-callback="handleGoogleCredentialResponse"
+           data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+           data-type="standard"
+           data-size="large"
+           data-theme="outline"
+           data-text="sign_in_with"
+           data-shape="rectangular"
+           data-logo_alignment="left">
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import AppButton from '@/components/common/AppButton.vue';
 
 const email = ref('');
 const password = ref('');
-const error = ref(null);
+const error = ref('');
 
 const store = useStore();
 const router = useRouter();
 
-const isLoading = computed(() => store.getters['auth/authStatus'] === 'loading');
-
-// Login Manual
 const handleLogin = async () => {
-  error.value = null;
   try {
+    error.value = '';
     await store.dispatch('auth/login', { email: email.value, password: password.value });
-    router.push('/');
+
+    const role = store.getters['auth/currentUser']?.role;
+    if (role === 'admin') {
+      router.push('/admin');
+    } else if (role === 'visitor') {
+      router.push('/');
+    } else {
+      router.push('/login');
+    }
   } catch (err) {
-    error.value = err.response?.data?.message || 'Terjadi kesalahan saat login.';
+    error.value = err.response?.data?.message || 'Login gagal.';
   }
 };
 
-// Login Google
 const handleGoogleCredentialResponse = async (response) => {
   try {
     const res = await fetch('http://localhost:5000/api/auth/google-login', {
@@ -88,69 +80,118 @@ const handleGoogleCredentialResponse = async (response) => {
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || 'Login Google gagal.');
 
+    const userPayload = {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      role: data.role,
+    };
+
+    localStorage.setItem('user', JSON.stringify(userPayload));
     localStorage.setItem('token', data.token);
-    // dispatch Vuex jika ada: await store.dispatch('auth/setUserFromToken', data.token);
-    router.push('/');
+
+    store.commit('auth/AUTH_SUCCESS', { user: userPayload, token: data.token });
+
+    const role = userPayload.role;
+    if (role === 'admin') {
+      router.push('/admin');
+    } else {
+      router.push('/');
+    }
   } catch (err) {
     error.value = err.message;
   }
 };
 
-// Dibuat global agar SDK Google bisa panggil
-window.handleGoogleCredentialResponse = handleGoogleCredentialResponse;
+onMounted(() => {
+  // Cegah akses ke halaman login jika sudah login
+  if (store.getters['auth/isLoggedIn']) {
+    const role = store.getters['auth/currentUser']?.role;
+    if (role === 'admin') {
+      router.push('/admin');
+    } else {
+      router.push('/');
+    }
+  }
+
+  // Daftarkan callback Google
+  window.handleGoogleCredentialResponse = handleGoogleCredentialResponse;
+
+  const script = document.createElement('script');
+  script.src = 'https://accounts.google.com/gsi/client';
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+});
 </script>
 
 <style scoped>
-.auth-page {
+.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 50px 20px;
-  background-color: #f8f9fa;
-  min-height: 80vh;
+  height: 100vh;
+  background: #f4f4f4;
 }
-.form-container {
-  width: 100%;
-  max-width: 420px;
+
+.login-form {
   background: white;
-  padding: 40px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  width: 350px;
+}
+
+h1 {
   text-align: center;
+  margin-bottom: 1rem;
 }
-.form-container h2 {
-  margin-bottom: 10px;
-}
-.form-container p {
-  margin-bottom: 30px;
-  color: #6c757d;
-}
+
 .form-group {
-  margin-bottom: 20px;
-  text-align: left;
+  margin-bottom: 1rem;
 }
-.form-group label {
+
+label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
+  margin-bottom: .5rem;
 }
-.form-group input {
+
+input {
   width: 100%;
-  padding: 12px;
+  padding: .5rem;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 5px;
 }
-.error-message {
-  color: red;
-  margin-bottom: 15px;
+
+button {
+  width: 100%;
+  padding: .75rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
 }
-.switch-form {
-  margin-top: 20px;
+
+button:hover {
+  background: #0056b3;
+}
+
+.separator {
   text-align: center;
-  font-size: 0.9em;
+  margin: 1rem 0;
 }
-.google-login {
-  display: flex;
-  justify-content: center;
+
+.separator span {
+  background: white;
+  padding: 0 10px;
+  color: #888;
+}
+
+.error {
+  color: red;
+  margin-top: .5rem;
+  text-align: center;
 }
 </style>

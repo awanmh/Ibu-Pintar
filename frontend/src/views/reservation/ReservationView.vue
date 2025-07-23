@@ -1,7 +1,7 @@
 <template>
   <div class="page-container form-page">
     <h1>Reservasi Layanan</h1>
-    <p>Amankan jadwal Anda untuk layanan premium kami. Pilih layanan, tanggal, dan waktu yang Anda inginkan.</p>
+    <p>Amankan jadwal Anda untuk layanan premium kami. Pilih layanan, tanggal, keluhan, dan waktu yang Anda inginkan.</p>
     
     <ReservationForm @submit="handleFormSubmit" :preselectedService="preselectedService" />
 

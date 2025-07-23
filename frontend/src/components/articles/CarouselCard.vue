@@ -2,14 +2,26 @@
   <div class="carousel-card">
     <router-link :to="`/articles/${article.id}`" class="card-link">
       <div class="card-image">
-        <img :src="article.image" :alt="article.title">
+        <img
+          :src="getImageUrl(article)"
+          :alt="article.title || 'Gambar artikel'"
+          loading="lazy"
+        />
       </div>
-      <!-- Konten bisa ditambahkan di sini jika perlu, seperti judul -->
     </router-link>
   </div>
 </template>
 
 <script setup>
+const BASE_URL = 'http://localhost:5000'; // ubah sesuai kebutuhan
+
+const getImageUrl = (article) => {
+  if (!article.imageUrl) return '/images/default-cover.jpg';
+  return article.imageUrl.startsWith('http')
+    ? article.imageUrl
+    : `${BASE_URL}${article.imageUrl}`;
+};
+
 defineProps({
   article: {
     type: Object,
@@ -20,16 +32,18 @@ defineProps({
 
 <style scoped>
 .carousel-card {
-  /* Tentukan lebar setiap kartu dan pastikan tidak menyusut */
-  flex: 0 0 32%; /* Menampilkan sekitar 3 kartu sekaligus */
+  flex: 0 0 32%;
   width: 32%;
-  scroll-snap-align: start; /* Untuk smooth scrolling snap */
+  scroll-snap-align: start;
   overflow: hidden;
+  padding: 0.5rem;
+  box-sizing: border-box;
 }
 
 .card-link {
   display: block;
   text-decoration: none;
+  color: inherit;
 }
 
 .card-image img {
@@ -45,7 +59,6 @@ defineProps({
   transform: scale(1.05);
 }
 
-/* Penyesuaian untuk layar lebih kecil */
 @media (max-width: 768px) {
   .carousel-card {
     flex: 0 0 80%;

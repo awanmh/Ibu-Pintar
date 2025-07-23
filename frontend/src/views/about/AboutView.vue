@@ -11,24 +11,24 @@
       <div class="container">
         <h2 class="section-title">Kenapa Ibu Pintar?</h2>
         <p class="text">
-          <strong>Ibu Pintar</strong> adalah platform digital yang dirancang untuk mendukung para calon ibu dan ibu muda
-          dalam mendapatkan informasi terpercaya seputar kehamilan, perawatan bayi, dan kesehatan keluarga.
-          Kami percaya bahwa ibu yang sehat dan bahagia adalah fondasi dari generasi masa depan yang kuat.
+          <strong>Ibu Pintar</strong> adalah platform digital yang dirancang untuk mendukung para calon ibu dan wanita
+          dalam mendapatkan informasi terpercaya seputar kehamilan, persalinan, masa nifas, perawatan bayi, dan kesehatan reproduksi wanita.
+          Kami percaya bahwa ibu yang sehat dan berdaya adalah fondasi dari generasi masa depan yang kuat.
         </p>
 
         <h2 class="section-title">Apa yang Kami Tawarkan</h2>
         <ul class="features-list">
-          <li><span>✔</span> Artikel terpercaya dari tenaga medis profesional</li>
+          <li><span>✔</span> Artikel terpercaya berbasis bukti ilmiah </li>
           <li><span>✔</span> Forum Tanya Bidan untuk mendapatkan jawaban langsung</li>
-          <li><span>✔</span> Beragam layanan treatment untuk kenyamanan dan kesehatan ibu</li>
+          <li><span>✔</span> Beragam layanan treatment untuk kenyamanan dan kesehatan ibu hamil serta persiapan menjadi orang tua </li>
           <li><span>✔</span> Navigasi mudah dan desain yang ramah pengguna</li>
         </ul>
 
         <h2 class="section-title">Misi Kami</h2>
         <p class="text">
-          Misi kami adalah menjadikan teknologi sebagai teman terbaik ibu dalam setiap fase kehidupan keluarga —
-          dari masa kehamilan, melahirkan, hingga perawatan anak. Dengan sentuhan kasih dan sains yang terpercaya,
-          kami ingin setiap ibu merasa didukung, teredukasi, dan dihargai.
+          Misi kami adalah menjadikan teknologi sebagai teman terbaik wanita dalam setiap fase kehidupan seorang wanita —
+          dari masa remaja, kehamilan, melahirkan, perawatan bayi hingga kesehatan reproduksi. Dengan informasi yang jelas dan terpercaya,
+          kami ingin setiap wanita merasa berdaya, didukung, teredukasi, dan dihargai.
         </p>
       </div>
     </section>

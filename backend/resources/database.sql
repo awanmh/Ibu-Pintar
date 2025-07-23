@@ -1,6 +1,6 @@
 -- SQL Dump Final - Kosong (Hanya Struktur)
 -- Proyek: Ibu Pintar
--- Versi: 3.2 (dengan tabel `treatments`)
+-- Versi: 3.2 (dengan tabel `treatments` + Google Login Support)
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -21,18 +21,21 @@ DROP TABLE IF EXISTS `treatments`;
 DROP TABLE IF EXISTS `users`;
 
 -- ========================
--- TABLE: users
+-- TABLE: users (FINAL untuk login Google + lokal)
 -- ========================
 CREATE TABLE `users` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL UNIQUE,
-  `password` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255), -- Nullable kalau login via Google
+  `googleId` VARCHAR(255), -- Untuk simpan ID dari Google
+  `provider` VARCHAR(50),  -- 'google' atau 'local'
   `role` ENUM('visitor', 'admin') DEFAULT 'visitor',
   `createdAt` DATETIME NOT NULL,
   `updatedAt` DATETIME NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- ========================
 -- TABLE: categories
@@ -46,9 +49,9 @@ CREATE TABLE `categories` (
 
 -- INSERT default categories
 INSERT INTO `categories` (`id`, `name`, `description`) VALUES
-(1, 'Ibu Hamil', 'Informasi dan tips seputar masa kehamilan.'),
-(2, 'Ibu Melahirkan', 'Panduan persiapan dan proses pasca-persalinan.'),
-(3, 'Kesehatan Wanita', 'Kesehatan dan persiapan untuk wanita dewasa.');
+(1, 'Kehamilan', 'Informasi dan tips seputar masa kehamilan.'),
+(2, 'Persalinan', 'Panduan persiapan dan tips dalam proses pre dan pasca-persalinan.'),
+(3, 'Kesehatan Reproduksi Wanita', 'Tips dan informasi kesehatan reproduksi wanita.');
 
 -- ========================
 -- TABLE: articles
@@ -142,7 +145,5 @@ CREATE TABLE `treatments` (
   `updatedAt` DATETIME NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
 
 COMMIT;

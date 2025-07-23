@@ -3,7 +3,7 @@
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="container hero-content">
-        <h1 class="animate-on-load" data-anim-order="1">Menemani Setiap Langkah Kehamilan Anda</h1>
+        <h1 class="animate-on-load" data-anim-order="1">Menemani Setiap Langkah Calon Ibu</h1>
         <p class="animate-on-load" data-anim-order="2">Sumber informasi dan layanan terpercaya untuk calon ibu. Jelajahi artikel, forum, dan layanan kami.</p>
         <router-link to="/tanya-bidan" class="animate-on-load" data-anim-order="3">
           <AppButton variant="primary" class="hero-button">Tanya Bidan</AppButton>
@@ -76,18 +76,23 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { dummyArticles } from '@/data/articles.js'; // Menggunakan data dummy
+import ApiService from '@/services/ApiService';
 import AppButton from '@/components/common/AppButton.vue';
 import ArticleCarousel from '@/components/articles/ArticleCarousel.vue';
 
 const articles = ref([]);
 const loading = ref(true);
-
 const featuredArticles = computed(() => articles.value.slice(0, 5));
 
-onMounted(() => {
-  articles.value = dummyArticles;
-  loading.value = false;
+onMounted(async () => {
+  try {
+    const response = await ApiService.get('/articles');
+    articles.value = response.data || [];
+  } catch (error) {
+    console.error('Gagal memuat artikel:', error);
+  } finally {
+    loading.value = false;
+  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {

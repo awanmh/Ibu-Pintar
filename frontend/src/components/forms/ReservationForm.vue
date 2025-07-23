@@ -12,6 +12,10 @@
       <label for="res-phone">Nomor Telepon</label>
       <input type="tel" id="res-phone" v-model="formData.phone" placeholder="Contoh: 08123456789" required>
     </div>
+     <div class="form-group">
+      <label for="res-phone">Keluhan</label>
+      <input type="tel" id="res-phone" v-model="formData.phone" placeholder="Contoh: kram kaki/nyeri punggung, pinggang" required>
+    </div>
 
     <div class="form-group">
       <label for="res-service">Pilih Layanan</label>
