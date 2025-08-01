@@ -3,7 +3,7 @@ import axios from 'axios';
 import store from '@/store';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://ibupintar-production.up.railway.app/api',
   timeout: 10000,
 });
 
@@ -22,6 +22,7 @@ apiClient.interceptors.request.use(
 // === Auth ===
 const register = userData => apiClient.post('/auth/register', userData);
 const login = userData => apiClient.post('/auth/login', userData);
+const googleLogin = tokenData => apiClient.post('/auth/google-login', tokenData);
 const getMe = () => apiClient.get('/auth/me');
 
 // === Artikel ===
@@ -69,6 +70,7 @@ const addToPackage = (data) => apiClient.post('/add-to-package', data);
 export default {
   register,
   login,
+  googleLogin,
   getMe,
   getArticles,
   getArticle,

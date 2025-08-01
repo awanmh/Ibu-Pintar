@@ -43,6 +43,7 @@
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import ApiService from '@/services/ApiService';
 
 const email = ref('');
 const password = ref('');
@@ -71,35 +72,22 @@ const handleLogin = async () => {
 
 const handleGoogleCredentialResponse = async (response) => {
   try {
-    const res = await fetch('http://localhost:5000/api/auth/google-login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ credential: response.credential }),
-    });
+    // 2. Ganti seluruh isi fungsi ini
+    const { data } = await ApiService.googleLogin({ credential: response.credential });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Login Google gagal.');
-
-    const userPayload = {
-      id: data.id,
-      name: data.name,
-      email: data.email,
-      role: data.role,
-    };
-
-    localStorage.setItem('user', JSON.stringify(userPayload));
+    // Simpan data user dan token ke local storage dan Vuex
+    localStorage.setItem('user', JSON.stringify(data));
     localStorage.setItem('token', data.token);
+    store.commit('auth/AUTH_SUCCESS', { user: data, token: data.token });
 
-    store.commit('auth/AUTH_SUCCESS', { user: userPayload, token: data.token });
-
-    const role = userPayload.role;
-    if (role === 'admin') {
+    // Arahkan ke halaman yang sesuai
+    if (data.role === 'admin') {
       router.push('/admin');
     } else {
       router.push('/');
     }
   } catch (err) {
-    error.value = err.message;
+    error.value = err.response?.data?.message || 'Login Google gagal.';
   }
 };
 

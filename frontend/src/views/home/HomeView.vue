@@ -86,7 +86,7 @@ const featuredArticles = computed(() => articles.value.slice(0, 5));
 
 onMounted(async () => {
   try {
-    const response = await ApiService.get('/articles');
+    const response = await ApiService.getArticles();
     articles.value = response.data || [];
   } catch (error) {
     console.error('Gagal memuat artikel:', error);
