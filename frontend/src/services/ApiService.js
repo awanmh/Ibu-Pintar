@@ -3,7 +3,7 @@ import axios from 'axios';
 import store from '@/store';
 
 const apiClient = axios.create({
-  baseURL: 'https://ibupintar-production.up.railway.app/api',
+  baseURL: 'https://bibupintar-production.up.railway.app/api',
   timeout: 10000,
 });
 
