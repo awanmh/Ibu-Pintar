@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunkfrontend"]=self["webpackChunkfrontend"]||[]).push([[648],{648:(n,e,u)=>{u.r(e),u.d(e,{default:()=>d});var a=u(641);function l(n,e){return(0,a.uX)(),(0,a.CE)("div",null,e[0]||(e[0]=[(0,a.Lk)("h1",null,"Selamat Datang di Dashboard Admin",-1),(0,a.Lk)("p",null,"Pilih menu di samping untuk mulai mengelola konten website.",-1)]))}var t=u(262);const i={},r=(0,t.A)(i,[["render",l]]),d=r}}]);
-//# sourceMappingURL=648.8801ff07.js.map
