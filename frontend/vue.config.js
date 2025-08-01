@@ -1,11 +1,13 @@
-// frontend/vue.config.js
-
-const { defineConfig } = require('@vue/cli-service');
-
 module.exports = defineConfig({
-  // Di sini kita menambahkan konfigurasi untuk development server
+  publicPath: '/',
   devServer: {
-    // Atur port yang Anda inginkan
-    port: 8081
+    port: 8080,
+    proxy: {
+      '^/api': {
+        target: 'https://bibupintar-production.up.railway.app', // Ganti dengan URL backend Railway
+        changeOrigin: true,
+        pathRewrite: { '^/api': '/api' }
+      }
+    }
   }
 });
