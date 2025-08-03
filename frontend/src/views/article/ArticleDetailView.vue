@@ -1,4 +1,3 @@
-// === File: src/views/ArticleDetailView.vue ===
 <template>
   <div class="page-container">
     <div v-if="loading" class="state-message">Memuat artikel...</div>
@@ -9,14 +8,18 @@
         <main class="main-content">
           <article>
             <div class="article-image-header">
-              <img :src="getFullImageUrl(article.imageUrl)" :alt="article.title">
+              <img :src="article.imageUrl" :alt="article.title" v-if="article.imageUrl">
             </div>
             <h1 class="article-title">{{ article.title }}</h1>
             <p class="article-meta">
               Oleh <strong>{{ article.author.name }}</strong> dalam kategori <strong>{{ article.category.name }}</strong><br>
               Dipublikasikan pada {{ formatDate(article.date_posted) }}
             </p>
-            <div class="article-content" v-html="formattedContent"></div>
+            <!-- ========================================================== -->
+            <!-- MENAMPILKAN KONTEN HTML DENGAN v-html -->
+            <!-- ========================================================== -->
+            <div class="article-content" v-html="article.content"></div>
+            <!-- ========================================================== -->
           </article>
           <CommentSection />
         </main>
@@ -30,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import ApiService from '@/services/ApiService';
 import { formatDate } from '@/utils/formatDate';
@@ -44,8 +47,6 @@ const loading = ref(true);
 const error = ref(null);
 const latestArticles = ref([]);
 const recommendedArticles = ref([]);
-
-const getFullImageUrl = (path) => `http://localhost:5000${path}`;
 
 const fetchArticle = async (id) => {
   loading.value = true;
@@ -72,13 +73,8 @@ const fetchLatestAndRecommended = async () => {
   }
 };
 
-const formattedContent = computed(() => {
-  if (!article.value) return '';
-  return article.value.content
-    .split(/\n\s*\n/)
-    .map(p => `<p>${p.trim()}</p>`)
-    .join('');
-});
+// Computed property 'formattedContent' tidak lagi diperlukan
+// karena konten sudah dalam format HTML.
 
 onMounted(() => fetchArticle(route.params.id));
 watch(() => route.params.id, (newId) => fetchArticle(newId));
@@ -137,7 +133,24 @@ watch(() => route.params.id, (newId) => fetchArticle(newId));
   line-height: 1.8;
   font-size: 1.1em;
 }
+
+/* ========================================================== */
+/* STYLING UNTUK KONTEN DARI QUILL EDITOR */
+/* ========================================================== */
 .article-content :deep(p) {
   margin-bottom: 1.5em;
 }
+.article-content :deep(a) {
+  color: #007bff; /* Warna biru untuk link */
+  text-decoration: underline;
+}
+.article-content :deep(ul),
+.article-content :deep(ol) {
+  padding-left: 2em;
+  margin-bottom: 1.5em;
+}
+.article-content :deep(li) {
+  margin-bottom: 0.5em;
+}
+/* ========================================================== */
 </style>

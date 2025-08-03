@@ -1,13 +1,15 @@
-module.exports = defineConfig({
+// vue.config.js
+
+module.exports = {
   publicPath: '/',
   devServer: {
     port: 8080,
     proxy: {
       '^/api': {
-        target: 'https://bibupintar-production.up.railway.app', // Ganti dengan URL backend Railway
+        target: 'https://bibupintar-production.up.railway.app',
         changeOrigin: true,
         pathRewrite: { '^/api': '/api' }
       }
     }
   }
-});
+};
