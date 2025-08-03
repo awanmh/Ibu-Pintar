@@ -15,11 +15,7 @@
               Oleh <strong>{{ article.author.name }}</strong> dalam kategori <strong>{{ article.category.name }}</strong><br>
               Dipublikasikan pada {{ formatDate(article.date_posted) }}
             </p>
-            <!-- ========================================================== -->
-            <!-- MENAMPILKAN KONTEN HTML DENGAN v-html -->
-            <!-- ========================================================== -->
             <div class="article-content" v-html="article.content"></div>
-            <!-- ========================================================== -->
           </article>
           <CommentSection />
         </main>
@@ -72,9 +68,6 @@ const fetchLatestAndRecommended = async () => {
     console.warn('Gagal memuat artikel tambahan.');
   }
 };
-
-// Computed property 'formattedContent' tidak lagi diperlukan
-// karena konten sudah dalam format HTML.
 
 onMounted(() => fetchArticle(route.params.id));
 watch(() => route.params.id, (newId) => fetchArticle(newId));
@@ -133,24 +126,23 @@ watch(() => route.params.id, (newId) => fetchArticle(newId));
   line-height: 1.8;
   font-size: 1.1em;
 }
-
-/* ========================================================== */
-/* STYLING UNTUK KONTEN DARI QUILL EDITOR */
-/* ========================================================== */
-.article-content :deep(p) {
-  margin-bottom: 1.5em;
-}
-.article-content :deep(a) {
-  color: #007bff; /* Warna biru untuk link */
-  text-decoration: underline;
-}
+.article-content :deep(p) { margin-bottom: 1.5em; }
+.article-content :deep(a) { color: #007bff; text-decoration: underline; }
 .article-content :deep(ul),
-.article-content :deep(ol) {
-  padding-left: 2em;
-  margin-bottom: 1.5em;
+.article-content :deep(ol) { padding-left: 2em; margin-bottom: 1.5em; }
+.article-content :deep(li) { margin-bottom: 0.5em; }
+
+/* === PERBAIKAN RESPONSIVE === */
+@media (max-width: 992px) {
+  .main-layout {
+    grid-template-columns: 1fr; /* Tumpuk menjadi 1 kolom */
+  }
+  .sidebar-content {
+    position: static; /* Hapus sticky di mobile */
+    margin-top: 40px;
+  }
+  .article-title {
+    font-size: 2em; /* Kecilkan judul di mobile */
+  }
 }
-.article-content :deep(li) {
-  margin-bottom: 0.5em;
-}
-/* ========================================================== */
 </style>

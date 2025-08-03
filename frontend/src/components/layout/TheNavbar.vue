@@ -87,6 +87,8 @@
         </nav>
       </div>
     </transition>
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay" v-if="sidebarOpen" @click="closeSidebar"></div>
   </header>
 </template>
 
@@ -124,11 +126,6 @@ const isDropdownOpen = ref(false);
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
-const closeDropdown = (event) => {
-  if (!event.target.closest('.profile-container')) {
-    isDropdownOpen.value = false;
-  }
-};
 
 // --- Sidebar (mobile) ---
 const sidebarOpen = ref(false);
@@ -139,13 +136,21 @@ const closeSidebar = () => {
   sidebarOpen.value = false;
 };
 
+// --- Close menus when clicking outside ---
+const closeMenus = (event) => {
+  // Close dropdown if click is outside profile container
+  if (isDropdownOpen.value && !event.target.closest('.profile-container')) {
+    isDropdownOpen.value = false;
+  }
+};
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
-  document.addEventListener('click', closeDropdown);
+  document.addEventListener('click', closeMenus);
 });
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
-  document.removeEventListener('click', closeDropdown);
+  document.removeEventListener('click', closeMenus);
 });
 </script>
 
@@ -346,13 +351,23 @@ onUnmounted(() => {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
+  height: 100%;
   width: 260px;
   background-color: white;
   box-shadow: 2px 0 8px rgba(0,0,0,0.15);
   padding: 60px 20px 20px;
   z-index: 2000;
   transform: translateX(-100%);
+}
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1999;
+  transition: opacity 0.3s ease;
 }
 .mobile-nav {
   display: flex;

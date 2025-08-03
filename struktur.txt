@@ -80,9 +80,7 @@ proyek-ibu-hamil/
     │   │       ├── ReservationForm.vue
     │   │       └── ConsultationForm.vue
     │   ├── data/
-    │   │   ├── articles.js
-    │   │   ├── dummyArticles.js
-    │   │   └── services.js
+    │   │    
     │   ├── router/
     │   │   └── index.js          
     │   ├── services/

@@ -1,4 +1,3 @@
-// === File: src/views/ArticlesView.vue ===
 <template>
   <div class="page-container animate-fade-in">
     <div v-if="status === 'loading'" class="loading">Memuat artikel...</div>
@@ -104,4 +103,11 @@ onMounted(() => {
 .animate-fade-in { animation: fadeIn 0.8s ease forwards; }
 .animate-slide-up { animation: slideUp 0.9s ease forwards; }
 .delay { animation-delay: 0.2s; }
+
+/* === PERBAIKAN RESPONSIVE === */
+@media (max-width: 768px) {
+  .top-section-grid {
+    grid-template-columns: 1fr; /* Tumpuk menjadi 1 kolom di mobile */
+  }
+}
 </style>
