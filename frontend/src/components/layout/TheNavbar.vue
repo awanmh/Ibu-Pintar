@@ -2,7 +2,7 @@
   <header class="navbar" :class="{ 'navbar-hidden': isHidden }">
     <div class="container">
       <!-- Hamburger Menu (Mobile) -->
-      <button class="hamburger" @click="toggleSidebar">
+      <button class="hamburger" @click.stop="toggleSidebar">
         &#9776;
       </button>
 
@@ -42,11 +42,9 @@
                 </div>
                 <div class="dropdown-divider"></div>
                 <router-link v-if="isAdmin" to="/admin" class="dropdown-item">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                   <span>Dashboard Admin</span>
                 </router-link>
                 <a @click="handleLogout" class="dropdown-item logout-item">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                   <span>Logout</span>
                 </a>
               </div>
@@ -62,7 +60,7 @@
 
     <!-- Mobile Sidebar -->
     <transition name="slide">
-      <div class="mobile-sidebar" v-if="sidebarOpen">
+      <div class="mobile-sidebar" v-if="sidebarOpen" @click.stop>
         <nav class="mobile-nav">
           <router-link to="/" @click="closeSidebar">Beranda</router-link>
           <router-link to="/articles" @click="closeSidebar">Artikel</router-link>
@@ -87,13 +85,14 @@
         </nav>
       </div>
     </transition>
+
     <!-- Overlay for mobile sidebar -->
     <div class="sidebar-overlay" v-if="sidebarOpen" @click="closeSidebar"></div>
   </header>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import AppButton from '@/components/common/AppButton.vue';
@@ -105,14 +104,40 @@ const isLoggedIn = computed(() => store.getters['auth/isLoggedIn']);
 const user = computed(() => store.getters['auth/currentUser']);
 const isAdmin = computed(() => store.getters['auth/isAdmin']);
 
+const isDropdownOpen = ref(false);
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+const sidebarOpen = ref(false);
+const toggleSidebar = async () => {
+  sidebarOpen.value = !sidebarOpen.value;
+  // Tunggu DOM update sebelum menambah/menghapus event listener
+  await nextTick();
+  if (sidebarOpen.value) {
+    // Tambahkan event listener setelah sidebar terbuka
+    setTimeout(() => {
+      document.addEventListener('click', handleOutsideClick);
+    }, 100);
+  } else {
+    document.removeEventListener('click', handleOutsideClick);
+  }
+};
+
+const closeSidebar = () => {
+  sidebarOpen.value = false;
+  document.removeEventListener('click', handleOutsideClick);
+};
+
 const handleLogout = () => {
   isDropdownOpen.value = false;
   sidebarOpen.value = false;
+  document.removeEventListener('click', handleOutsideClick);
   store.dispatch('auth/logout');
   router.push('/login');
 };
 
-// --- Scroll logic ---
+// Scroll hide navbar
 const isHidden = ref(false);
 let lastScrollY = window.scrollY;
 const handleScroll = () => {
@@ -121,36 +146,36 @@ const handleScroll = () => {
   lastScrollY = currentScroll <= 0 ? 0 : currentScroll;
 };
 
-// --- Dropdown user menu (desktop) ---
-const isDropdownOpen = ref(false);
-const toggleDropdown = () => {
-  isDropdownOpen.value = !isDropdownOpen.value;
+// Handle clicks outside sidebar (hanya untuk sidebar)
+const handleOutsideClick = (event) => {
+  const sidebar = document.querySelector('.mobile-sidebar');
+  const hamburger = document.querySelector('.hamburger');
+  
+  if (sidebar && hamburger && 
+      !sidebar.contains(event.target) && 
+      !hamburger.contains(event.target)) {
+    closeSidebar();
+  }
 };
 
-// --- Sidebar (mobile) ---
-const sidebarOpen = ref(false);
-const toggleSidebar = () => {
-  sidebarOpen.value = !sidebarOpen.value;
-};
-const closeSidebar = () => {
-  sidebarOpen.value = false;
-};
-
-// --- Close menus when clicking outside ---
-const closeMenus = (event) => {
-  // Close dropdown if click is outside profile container
-  if (isDropdownOpen.value && !event.target.closest('.profile-container')) {
+// Handle clicks outside dropdown (hanya untuk dropdown)
+const handleDropdownOutsideClick = (event) => {
+  const profileContainer = document.querySelector('.profile-container');
+  if (profileContainer && !profileContainer.contains(event.target)) {
     isDropdownOpen.value = false;
   }
 };
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
-  document.addEventListener('click', closeMenus);
+  // Event listener untuk dropdown selalu aktif
+  document.addEventListener('click', handleDropdownOutsideClick);
 });
+
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
-  document.removeEventListener('click', closeMenus);
+  document.removeEventListener('click', handleDropdownOutsideClick);
+  document.removeEventListener('click', handleOutsideClick);
 });
 </script>
 
@@ -346,6 +371,8 @@ onUnmounted(() => {
   border: none;
   cursor: pointer;
   display: none; /* Hidden by default */
+  padding: 8px;
+  color: #333;
 }
 .mobile-sidebar {
   position: fixed;
@@ -357,7 +384,7 @@ onUnmounted(() => {
   box-shadow: 2px 0 8px rgba(0,0,0,0.15);
   padding: 60px 20px 20px;
   z-index: 2000;
-  transform: translateX(-100%);
+  overflow-y: auto;
 }
 .sidebar-overlay {
   position: fixed;
@@ -379,6 +406,10 @@ onUnmounted(() => {
   color: #333;
   font-size: 1.1rem;
   font-weight: 600;
+  padding: 8px 0;
+}
+.mobile-nav a:hover {
+  color: #c2185b;
 }
 .mobile-divider {
   margin: 10px 0;
@@ -388,8 +419,28 @@ onUnmounted(() => {
 .mobile-profile {
   padding: 10px 0;
 }
+.mobile-profile strong {
+  display: block;
+  font-weight: 600;
+  color: #333;
+}
+.mobile-profile small {
+  display: block;
+  color: #777;
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
 .mobile-link {
   padding: 8px 0;
+  text-decoration: none;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: block;
+}
+.mobile-link:hover {
+  color: #c2185b;
 }
 
 /* Animation */
@@ -419,5 +470,13 @@ onUnmounted(() => {
     left: 50%;
     transform: translateX(-50%);
   }
+  .container {
+    position: relative;
+  }
+}
+
+/* Prevent body scroll when sidebar is open */
+body.sidebar-open {
+  overflow: hidden;
 }
 </style>

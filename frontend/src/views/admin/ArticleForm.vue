@@ -1,3 +1,4 @@
+//ArticleForm.vue
 <template>
   <div>
     <h1>{{ isEditing ? 'Edit Artikel' : 'Tambah Artikel Baru' }}</h1>
@@ -20,10 +21,14 @@
           <p>Preview Gambar Baru:</p>
           <img :src="imagePreview" alt="Preview Gambar">
         </div>
+        <!-- ========================================================== -->
+        <!-- PERBAIKAN DI SINI: Hapus prefix localhost -->
+        <!-- ========================================================== -->
         <div v-else-if="isEditing && article.imageUrl" class="image-preview">
             <p>Gambar Saat Ini:</p>
             <img :src="article.imageUrl" alt="Gambar Artikel">
         </div>
+        <!-- ========================================================== -->
       </div>
       
       <div class="form-group">
@@ -36,9 +41,6 @@
         </select>
       </div>
 
-      <!-- ========================================================== -->
-      <!-- TEXTAREA DIGANTI DENGAN RICH TEXT EDITOR (QUILL) -->
-      <!-- ========================================================== -->
       <div class="form-group">
         <label for="content">Konten</label>
         <QuillEditor 
@@ -49,7 +51,6 @@
           style="min-height: 250px;"
         />
       </div>
-      <!-- ========================================================== -->
 
       <AppButton type="submit" variant="primary" :disabled="isUploading">
         {{ isUploading ? 'Menyimpan...' : (isEditing ? 'Simpan Perubahan' : 'Publikasikan Artikel') }}
@@ -65,7 +66,6 @@ import { useStore } from 'vuex';
 import ApiService from '@/services/ApiService';
 import AppButton from '@/components/common/AppButton.vue';
 
-// 1. Impor Quill Editor dan CSS-nya
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
@@ -75,7 +75,7 @@ const store = useStore();
 
 const article = ref({
   title: '',
-  content: '', // Akan berisi HTML dari Quill Editor
+  content: '',
   imageUrl: '',
   category_id: '',
 });
@@ -115,10 +115,9 @@ onMounted(async () => {
 const handleSubmit = async () => {
   isUploading.value = true;
   
-  // Siapkan FormData untuk mengirim data teks dan file
   const formData = new FormData();
   formData.append('title', article.value.title);
-  formData.append('content', article.value.content); // Kirim konten sebagai HTML
+  formData.append('content', article.value.content);
   formData.append('category_id', article.value.category_id);
   
   const author_id = store.getters['auth/currentUser']?.id;
@@ -129,7 +128,6 @@ const handleSubmit = async () => {
   }
   formData.append('author_id', author_id);
 
-  // Tambahkan file gambar hanya jika ada yang dipilih
   if (selectedFile.value) {
     formData.append('image', selectedFile.value);
   }

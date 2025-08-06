@@ -65,6 +65,15 @@ const deleteTreatment = id => apiClient.delete(`/treatments/${id}`);
 const getTreatmentBySlug = slug => apiClient.get(`/treatments/slug/${slug}`);
 const addToPackage = (data) => apiClient.post('/add-to-package', data);
 
+// ==========================================================
+// FUNGSI BARU UNTUK KOMENTAR
+// ==========================================================
+const getComments = (articleId) => apiClient.get(`/articles/${articleId}/comments`);
+const createComment = (articleId, commentData) => apiClient.post(`/articles/${articleId}/comments`, commentData);
+const deleteComment = (articleId, commentId) => apiClient.delete(`/articles/${articleId}/comments/${commentId}`);
+// ==========================================================
+
+
 
 // === Export Semua API ===
 export default {
@@ -74,6 +83,9 @@ export default {
   getMe,
   getArticles,
   getArticle,
+  getComments,
+  createComment,
+  deleteComment,
   createArticle,
   updateArticle,
   deleteArticle,

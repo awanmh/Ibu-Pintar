@@ -1,3 +1,4 @@
+//ArticleView.vue
 <template>
   <div class="page-container animate-fade-in">
     <div v-if="status === 'loading'" class="loading">Memuat artikel...</div>

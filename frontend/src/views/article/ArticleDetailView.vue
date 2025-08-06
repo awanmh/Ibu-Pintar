@@ -1,3 +1,4 @@
+//ArticleDetailView.vue
 <template>
   <div class="page-container">
     <div v-if="loading" class="state-message">Memuat artikel...</div>

@@ -1,3 +1,4 @@
+// HomeView.vue
 <template>
   <div class="home-view">
     <!-- Hero Section -->
@@ -5,8 +6,8 @@
       <div class="container hero-content">
         <h1 class="animate-on-load" data-anim-order="1">Menemani Setiap Langkah Calon Ibu</h1>
         <p class="animate-on-load" data-anim-order="2">Sumber informasi dan layanan terpercaya untuk calon ibu. Jelajahi artikel, forum, dan layanan kami.</p>
-        <router-link to="/tanya-bidan" class="animate-on-load" data-anim-order="3">
-          <AppButton variant="primary" class="hero-button">Tanya Bidan</AppButton>
+        <router-link to="/tanya-bidan">
+          <AppButton variant="primary" class="hero-button animate-on-load" data-anim-order="3">Tanya Bidan</AppButton>
         </router-link>
       </div>
     </section>
@@ -19,13 +20,13 @@
           <router-link to="/articles" class="see-all-link">Lihat Semua &gt;</router-link>
         </div>
         <div class="animate-on-load" data-anim-order="5">
-            <ArticleCarousel v-if="featuredArticles.length > 0" :articles="featuredArticles" />
-            <div v-else-if="loading" class="loading">Memuat artikel...</div>
+          <ArticleCarousel v-if="featuredArticles.length > 0" :articles="featuredArticles" />
+          <div v-else-if="loading" class="loading">Memuat artikel...</div>
         </div>
       </div>
     </section>
     
-    <!-- ### BAGIAN BARU DITAMBAHKAN DI SINI ### -->
+    <!-- Why Us Section -->
     <section class="why-us-section">
         <div class="container">
             <h2 class="animate-on-load" data-anim-order="6">Mengapa Memilih Ibu Pintar?</h2>
@@ -136,15 +137,29 @@ onMounted(async () => {
 .animate-on-load[data-anim-order="12"] { transition-delay: 0.2s; }
 .animate-on-load[data-anim-order="13"] { transition-delay: 0.3s; }
 
+
+/* ========================================================== */
+/* PERBAIKAN UTAMA: MEMBUAT SETIAP SECTION FULL-SCREEN */
+/* ========================================================== */
+.home-view > section {
+  min-height: 100vh; /* Tinggi minimal adalah 100% dari tinggi layar */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Konten di tengah secara vertikal */
+  align-items: center; /* Konten di tengah secara horizontal */
+  padding: 60px 20px; /* Padding atas-bawah dan kiri-kanan */
+}
+/* ========================================================== */
+
+
 /* General Styles */
-.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
 h2 { text-align: center; font-size: 2.25em; margin-bottom: 20px; color: #343a40; }
 .section-subtitle { text-align: center; max-width: 600px; margin: 0 auto 50px; color: #6c757d; font-size: 1.1rem; }
 
 /* Hero Section */
 .hero-section {
   background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
-  padding: 300px 0;
   text-align: center;
   overflow: hidden;
   color: white;
@@ -171,16 +186,16 @@ h2 { text-align: center; font-size: 2.25em; margin-bottom: 20px; color: #343a40;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-/* Featured Articles & Why Us Section */
-.featured-articles, .why-us-section, .services-section { 
-  padding: 200px 0; 
+/* Featured Articles */
+.featured-articles {
+    background-color: #fff0f3;
 }
-
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  width: 100%;
 }
 .section-header h2 {
   text-align: left;
@@ -201,6 +216,7 @@ h2 { text-align: center; font-size: 2.25em; margin-bottom: 20px; color: #343a40;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
     margin-top: 50px;
+    width: 100%;
 }
 .feature-card {
     background: #ffffff;
@@ -226,7 +242,7 @@ h2 { text-align: center; font-size: 2.25em; margin-bottom: 20px; color: #343a40;
 .services-section {
     background-color: #ffffff;
 }
-.service-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+.service-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; }
 .service-card { 
   background: white; 
   padding: 40px; 
